@@ -6,6 +6,7 @@ const CommonButton = ({
     mainContainer,
     ButtonContainer,
     ButtonTitle,
+    ButtonTitleStyle,
     OnPress
 }) => {
     const navigation=useNavigation();
@@ -16,7 +17,7 @@ const CommonButton = ({
   return (
     <View style={[styles.ViewContainer,mainContainer]}>
       <TouchableOpacity style={[styles.OpacityContainer,ButtonContainer]} onPress={()=>{handleNavigation()}}>
-        <Text style={[styles.title,ButtonTitle]}>{ButtonTitle}</Text>
+        <Text style={[styles.title,ButtonTitleStyle]}>{ButtonTitle}</Text>
       </TouchableOpacity>
     </View>
   )

@@ -1,342 +1,388 @@
-// import { Button, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
-// import React, { useState } from 'react';
-// import Header from '../../components/templates/Header';
-// import { width } from '../../utils/CommonUtils';
-// import { useNavigation } from '@react-navigation/native';
-// import CommonButton from '../../components/atoms/CommonButton';
-
-// const ExpenseForm = () => {
-//   const navigation = useNavigation();
-//   const [amount,setAmount]=useState("1000");
-
-//   return (
-//     <View style={styles.container}>
-//       <Header
-//         title="Expense Form"
-//         containerStyle={styles.headerContainer}
-//         titleStyle={styles.titleStyle}
-//       />
-//       <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
-//       <View>
-//         <View style={styles.amountContainer}>
-//           {/* Add form components here */}
-//           <Text style={styles.TitleAmount}>Amount spent </Text>
-//           <Text style={styles.amountText}>{"\u20B9"}{" "}{amount}</Text>
-
-//         </View>
-//         <View style={styles.DateContainer}>
-//         {/* <View>
-
-//         </View>
-//         <View>
-          
-//         </View> */}
-//         </View>
-//         </View>
-//         <View style={styles.FormContainer}>
-
-//         </View>
-//       </ScrollView>
-//       <CommonButton 
-//         ButtonTitle="Submit" 
-//         OnPress={'ExpenseType'} 
-//       />
-//     </View>
-//   );
-// };
-
-// export default ExpenseForm;
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     backgroundColor: '#FFFFFF', // Ensures consistent background
-//   },
-//   headerContainer: {
-//     backgroundColor: '#D4F4E4',
-//     padding: width * 0.04, // Added padding for better layout
-//   },
-//   titleStyle: {
-//     fontSize: width * 0.04,
-//     color: '#00513D', // Matches the theme
-//     fontWeight: 'bold',
-//   },
-//   scrollView: {
-//     flex: 1,
-//     backgroundColor: '#F9F9F9',
-//   },
-//   amountContainer: {
-//     paddingVertical: width * 0.07,
-//     paddingHorizontal:width*0.1,
-//     backgroundColor: '#A7E8DC',
-//     marginBottom: width * 0.05, 
-//     borderBottomLeftRadius:50,
-//     borderBottomRightRadius:50,
-//     shadowColor: 'green',
-//     shadowOffset: { width: 0, height: 2 },
-//     shadowOpacity: 0.1,
-//     shadowRadius: 4,
-//     elevation: 3,
-//   },
-//   DateContainer:{
-//     flex:1,
-//     borderWidth:0.4,
-//     padding:40,
-//     bottom:60,
-//     marginHorizontal:30,
-//     backgroundColor:"white",
-//     borderRadius:8,
-//     shadowColor: '#000',
-//     shadowOffset: { width: 0, height: 2 },
-//     shadowOpacity: 0.1,
-//     shadowRadius: 4,
-//     elevation: 3,
-//   },
-//   TitleAmount:{
-//     textAlign:"center",
-//     lineHeight:30,
-//     fontSize:22,
-//     fontWeight:"600",
-//     padding:10,
-//   },
-//   amountText:{
-//     textAlign:"center",
-//     lineHeight:30,
-//     fontSize:22,
-//     fontWeight:"600",
-//     padding:10,
-//     marginBottom:30,
-    
-//   },
-//   FormContainer:{
-//     flex:1,
-//     borderWidth:0.4,
-//     padding:40,
-//     // bottom:60,
-//     marginHorizontal:30,
-//     backgroundColor:"white",
-//     borderRadius:8,
-//     shadowColor: '#000',
-//     shadowOffset: { width: 0, height: 2 },
-//     shadowOpacity: 0.1,
-//     shadowRadius: 4,
-//     elevation: 3,
-//   }
-// });
-import { Button, Image, Modal, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import React, { useState } from 'react';
-import Header from '../../components/templates/Header';
-import { width } from '../../utils/CommonUtils';
+import {
+  Image,
+  Modal,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+  KeyboardAvoidingView,
+  Platform,
+} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import Header from '../../components/templates/Header';
 import CommonButton from '../../components/atoms/CommonButton';
 import CategoryModal from '../../components/templates/modals/CategoryModal';
+import { Icons } from '../../utils/ImageConstant';
+import { height, width } from '../../utils/CommonUtils';
+
+const PAYMENT_METHODS = ['Cash', 'Credit Card', 'Debit Card', 'UPI'];
+
+const FormField = ({ label, children, style }) => (
+  <View style={[styles.fieldContainer, style]}>
+    <Text style={styles.label}>{label}</Text>
+    {children}
+  </View>
+);
+
+const ModalSelector = ({ visible, onClose, data, onSelect }) => (
+  <Modal visible={visible} animationType="slide" transparent>
+    <TouchableOpacity 
+      style={styles.modalOverlay} 
+      activeOpacity={1} 
+      onPress={onClose}
+    >
+      <View style={styles.modalContent}>
+        <View style={styles.modalHeader}>
+          <Text style={styles.modalTitle}>Select Option</Text>
+          <TouchableOpacity onPress={onClose}>
+            <Text style={styles.modalClose}>✕</Text>
+          </TouchableOpacity>
+        </View>
+        {data.map((item, index) => (
+          <TouchableOpacity
+            key={index}
+            style={styles.modalItem}
+            onPress={() => {
+              onSelect(item);
+              onClose();
+            }}
+          >
+            <Text style={styles.modalItemText}>{item}</Text>
+          </TouchableOpacity>
+        ))}
+      </View>
+    </TouchableOpacity>
+  </Modal>
+);
 
 const ExpenseForm = () => {
   const navigation = useNavigation();
-  const [amount, setAmount] = useState("1000");
-  const [category, setCategory] = useState(null);
-  const [date, setDate] = useState(new Date().toISOString().slice(0, 10));
-  const [paymentMethod, setPaymentMethod] = useState(null);
-  const [description, setDescription] = useState("");
-  const [isRecurring, setIsRecurring] = useState(false);
-  const [attachment, setAttachment] = useState(null);
+  const [formData, setFormData] = useState({
+    amount: '1000',
+    category: null,
+    date: new Date().toISOString().slice(0, 10),
+    paymentMethod: null,
+    description: '',
+    attachment: null,
+  });
+  const [modals, setModals] = useState({
+    category: false,
+    paymentMethod: false,
+  });
 
-  const [categoryModalVisible, setCategoryModalVisible] = useState(false);
-  const [paymentMethodModalVisible, setPaymentMethodModalVisible] = useState(false);
-
-  const paymentMethods = ['Cash', 'Credit Card', 'Debit Card', 'UPI'];
-
-  const toggleCategoryModal = () => {
-    setCategoryModalVisible(!categoryModalVisible);
+  const updateFormField = (field, value) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
   };
 
-  const togglePaymentMethodModal = () => {
-    setPaymentMethodModalVisible(!paymentMethodModalVisible);
+  const toggleModal = (modalName) => {
+    setModals(prev => ({ ...prev, [modalName]: !prev[modalName] }));
   };
 
-  const handleCategorySelect = (item) => {
-    setCategory(item);
-    console.log("ITEM LIST SELECTED",item)
-    toggleCategoryModal();
-  };
-
-  const handlePaymentMethodSelect = (item) => {
-    setPaymentMethod(item);
-    togglePaymentMethodModal();
+  const handleSubmit = () => {
+    if (!formData.amount || !formData.category || !formData.paymentMethod) {
+      // Add your error handling here
+      return;
+    }
+    navigation.navigate('ExpenseType');
   };
 
   return (
-    <View style={styles.container}>
+    <KeyboardAvoidingView 
+      style={styles.container}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+    >
       <Header
-        title="Expense Form"
+        title="Add Expense"
         containerStyle={styles.headerContainer}
         titleStyle={styles.titleStyle}
       />
+      
       <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
-        <View style={styles.formContainer}>
-          <Text style={styles.label}>Amount</Text>
+        <View style={styles.amountContainer}>
+          <Text style={styles.amountLabel}>Amount Spent</Text>
           <TextInput
-            style={styles.input}
-            value={amount}
-            onChangeText={setAmount}
+            style={styles.amountInput}
+            placeholder="₹0"
+            value={formData.amount}
+            onChangeText={(value) => updateFormField('amount', value.replace(/[^0-9]/g, ''))}
             keyboardType="numeric"
+            placeholderTextColor="#999"
           />
+        </View>
 
-          <Text style={styles.label}>Category</Text>
-          <TouchableOpacity style={styles.dropdownContainer} onPress={toggleCategoryModal}>
-          <Image source={category} />
-            <Text style={styles.dropdownText}>{category || 'Select category'}</Text>
-          </TouchableOpacity>
+        <View style={styles.formWrapper}>
+          <FormField 
+            label="Category" 
+            style={styles.categoryField}
+          >
+            <TouchableOpacity 
+              style={styles.selector}
+              onPress={() => toggleModal('category')}
+            >
+              {formData.category?.CategoryIcon && (
+                <Image 
+                  style={styles.categoryIcon} 
+                  source={formData.category.CategoryIcon}
+                />
+              )}
+              <Text style={styles.selectorText}>
+                {formData.category?.Category || 'Select category'}
+              </Text>
+            </TouchableOpacity>
+          </FormField>
 
-          <CategoryModal
-        categoryModalVisible={categoryModalVisible}
-        toggleCategoryModal={toggleCategoryModal}
-        onCategorySelect={handleCategorySelect}
-      />
+          <View style={styles.formContent}>
+            <FormField label="Payment Method">
+              <TouchableOpacity 
+                style={styles.selector}
+                onPress={() => toggleModal('paymentMethod')}
+              >
+                <Text style={styles.selectorText}>
+                  {formData.paymentMethod || 'Select payment method'}
+                </Text>
+              </TouchableOpacity>
+            </FormField>
 
-          <Text style={styles.label}>Date</Text>
-          <TextInput
-            style={styles.input}
-            value={date}
-            onChangeText={setDate}
-            editable={false}
-          />
+            <FormField label="Date">
+              <TextInput
+                style={styles.input}
+                value={formData.date}
+                placeholder="DD/MM/YYYY"
+                editable={false}
+              />
+            </FormField>
 
-          <Text style={styles.label}>Payment Method</Text>
-          <TouchableOpacity style={styles.dropdownContainer} onPress={togglePaymentMethodModal}>
-         
-            <Text style={styles.dropdownText}>{paymentMethod || 'Select payment method'}</Text>
-          </TouchableOpacity>
+            <FormField label="Description">
+              <TextInput
+                style={[styles.input, styles.textArea]}
+                placeholder="Add a short description..."
+                value={formData.description}
+                onChangeText={(value) => updateFormField('description', value)}
+                multiline
+                numberOfLines={4}
+                textAlignVertical="top"
+              />
+            </FormField>
 
-          <Modal visible={paymentMethodModalVisible} animationType="slide" transparent>
-            <View style={styles.modalContainer}>
-              <View style={styles.modalContent}>
-                {paymentMethods.map((item, index) => (
-                  <TouchableOpacity
-                    key={index}
-                    style={styles.modalItem}
-                    onPress={() => handlePaymentMethodSelect(item)}
-                  >
-                    <Text style={styles.modalItemText}>{item}</Text>
-                  </TouchableOpacity>
-                ))}
-
-              </View>
-            </View>
-          </Modal>
-
-          <Text style={styles.label}>Description</Text>
-          <TextInput
-            style={styles.input}
-            value={description}
-            onChangeText={setDescription}
-            multiline
-          />
-
-          <View style={styles.checkboxContainer}>
-            {/* <Checkbox
-              status={isRecurring ? 'checked' : 'unchecked'}
-              onPress={() => setIsRecurring(!isRecurring)}
-            /> */}
-            <Text style={styles.label}>Recurring Expense</Text>
+            <FormField label="Upload Attachment">
+              <TouchableOpacity style={styles.attachmentButton}>
+                <Image style={styles.attachmentIcon} source={Icons.Attachment} />
+                <Text style={styles.attachmentText}>
+                  {formData.attachment ? 'File selected' : 'Tap to upload'}
+                </Text>
+              </TouchableOpacity>
+            </FormField>
           </View>
-
-          {isRecurring && (
-            <View>
-              <Text style={styles.label}>Frequency</Text>
-              {/* Add frequency selection dropdown or input here */}
-            </View>
-          )}
-
-          {/* Attachment input can be added here */}
         </View>
       </ScrollView>
-      <CommonButton
-        ButtonTitle="Submit"
-        OnPress={'ExpenseType'}
+
+      <CategoryModal
+        categoryModalVisible={modals.category}
+        toggleCategoryModal={() => toggleModal('category')}
+        onCategorySelect={(category) => {
+          updateFormField('category', category);
+          toggleModal('category');
+        }}
       />
-    </View>
+
+      <ModalSelector
+        visible={modals.paymentMethod}
+        onClose={() => toggleModal('paymentMethod')}
+        data={PAYMENT_METHODS}
+        onSelect={(method) => updateFormField('paymentMethod', method)}
+      />
+
+      <View style={styles.footer}>
+        <CommonButton
+          ButtonTitle="Submit Expense"
+          OnPress={handleSubmit}
+          ButtonTitleStyle={styles.submitButton}
+        />
+      </View>
+    </KeyboardAvoidingView>
   );
 };
-
-export default ExpenseForm;
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#F5F7FA',
   },
   headerContainer: {
     backgroundColor: '#D4F4E4',
-    padding: width * 0.04,
+    paddingVertical: 16,
+    paddingHorizontal: 20,
   },
   titleStyle: {
     fontSize: width * 0.04,
     color: '#00513D',
-    fontWeight: 'bold',
+    fontWeight: '600',
   },
   scrollView: {
     flex: 1,
-    backgroundColor: '#F9F9F9',
   },
-  formContainer: {
-    flex: 1,
-    backgroundColor: '#FFFFFF',
-    padding: width * 0.05,
-    marginHorizontal: width * 0.05,
-    marginVertical: width * 0.05,
-    borderRadius: 8,
+  amountContainer: {
+    height: height * 0.28,
+    backgroundColor: '#A7E8DC',
+    borderBottomLeftRadius: 80,
+    borderBottomRightRadius: 80,
+    paddingHorizontal: 24,
+    paddingTop:30,
+    paddingBottom: 40,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
-    elevation: 3,
+    elevation: 4,
+  },
+  amountLabel: {
+    fontSize: width * 0.038,
+    color: '#00513D',
+    fontWeight: '600',
+    marginBottom: 12,
+  },
+  amountInput: {
+    fontSize: width * 0.05,
+    backgroundColor: '#FFFFFF',
+    padding: width * 0.03,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: '#E0E0E0',
+    textAlign: 'center',
+    color: '#333333',
+    fontWeight: '600',
+  },
+  formWrapper: {
+    marginTop: -(height * 0.10),
+    paddingHorizontal: 20,
+  },
+  categoryField: {
+    marginBottom: 15,
+  },
+  formContent: {
+    gap: 15,
+    marginBottom: 20,
+    backgroundColor:"white",
+    padding:8
+  },
+  fieldContainer: {
+    backgroundColor: '#FFFFFF',
+    padding: 12,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: '#E0E0E0',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.05,
+    shadowRadius: 2,
+    elevation: 2,
   },
   label: {
     fontSize: width * 0.035,
-    fontWeight: 'bold',
-    marginBottom: width * 0.02,
+    color: '#333333',
+    fontWeight: '500',
+    marginBottom: 8,
   },
   input: {
+    fontSize: width * 0.030,
+    backgroundColor: '#F9F9F9',
+    padding: 12,
+    borderRadius: 8,
     borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 4,
-    paddingHorizontal: width * 0.03,
-    paddingVertical: width * 0.02,
-    marginBottom: width * 0.04,
+    borderColor: '#E0E0E0',
+    color: '#333333',
   },
-  dropdownContainer: {
+  textArea: {
+    height: 100,
+    textAlignVertical: 'top',
+  },
+  selector: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#F9F9F9',
+    padding: 12,
+    borderRadius: 8,
     borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 4,
-    paddingHorizontal: width * 0.03,
-    paddingVertical: width * 0.02,
-    marginBottom: width * 0.04,
+    borderColor: '#E0E0E0',
   },
-  dropdownText: {
-    color: '#666',
+  selectorText: {
+    fontSize: width * 0.030,
+    color: '#333333',
   },
-  modalContainer: {
+  categoryIcon: {
+    width: width * 0.06,
+    height: width * 0.06,
+    marginRight: 8,
+  },
+  attachmentButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#F9F9F9',
+    padding: 16,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderStyle: 'dashed',
+    borderColor: '#E0E0E0',
+  },
+  attachmentIcon: {
+    width: width * 0.06,
+    height: width * 0.06,
+    marginRight: 8,
+  },
+  attachmentText: {
+    fontSize: width * 0.03,
+    color: '#666666',
+  },
+  modalOverlay: {
     flex: 1,
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: 'flex-end',
   },
   modalContent: {
     backgroundColor: '#FFFFFF',
-    padding: width * 0.05,
-    borderRadius: 8,
-    width: '80%',
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    padding: 20,
+    maxHeight: '80%',
+  },
+  modalHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  modalTitle: {
+    fontSize: width * 0.038,
+    fontWeight: '600',
+    color: '#333333',
+  },
+  modalClose: {
+    fontSize: width * 0.06,
+    color: '#666666',
   },
   modalItem: {
-    paddingVertical: width * 0.02,
+    padding: width * 0.03,
+    borderBottomWidth: 0.7,
+    borderBottomColor: '#E0E0E0',
   },
   modalItemText: {
-    fontSize: width * 0.035,
+    fontSize: width * 0.03,
+    color: '#333333',
   },
-  checkboxContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: width * 0.04,
+  footer: {
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    backgroundColor: '#FFFFFF',
+    borderTopWidth: 1,
+    borderTopColor: '#E0E0E0',
+  },
+  submitButton: {
+    fontSize: width * 0.038,
   },
 });
+
+export default ExpenseForm;

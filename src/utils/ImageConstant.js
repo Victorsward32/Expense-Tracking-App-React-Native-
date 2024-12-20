@@ -20,7 +20,8 @@ export const Icons ={
     rupeesIcon:require('../assets/icons/rupeeIndian.png'),
     IncomeIcon:require('../assets/icons/ArrowDown.png'),
     ExpendetureIcon:require('../assets/icons/ArrowUp.png'),
-    AddIcon:require('../assets/icons/addIcons.png')
+    AddIcon:require('../assets/icons/addIcons.png'),
+    Attachment:require('../assets/icons/attachment.png')
 }
 
 export const ExpensesIcon={

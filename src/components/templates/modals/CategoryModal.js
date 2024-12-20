@@ -38,7 +38,7 @@ const CategoryModal = ({ categoryModalVisible, toggleCategoryModal, onCategorySe
                     <TouchableOpacity
                       key={itemIndex}
                       style={styles.appItem}
-                      onPress={() => onCategorySelect(item.Option)}
+                      onPress={() => onCategorySelect({Category: item.Option, CategoryIcon:item.Icon})}
                     >
                       <Image source={item.Icon} style={styles.appIcon} />
                       <Text style={styles.appName}>{item.Option}</Text>
@@ -102,9 +102,9 @@ const styles = StyleSheet.create({
     padding: 12,
     borderRadius: 8,
     marginBottom: 12,
-    width: '48%', // Adjusted for better grid layout
+    width: '48%',
     alignItems: 'center',
-    elevation: 2, // Added subtle shadow for a better visual effect
+    elevation: 2, 
   },
   appIcon: {
     width: width * 0.1,
