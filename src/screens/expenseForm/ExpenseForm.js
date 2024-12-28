@@ -63,7 +63,8 @@ const ExpenseForm = () => {
   const [formData, setFormData] = useState({
     amount: '1000',
     category: null,
-    date: new Date().toISOString().slice(0, 10),
+    startDate: new Date().toISOString().slice(0, 10),
+    endDate: new Date().toISOString().slice(0, 10),
     paymentMethod: null,
     description: '',
     attachment: null,
@@ -109,32 +110,30 @@ const ExpenseForm = () => {
             value={formData.amount}
             onChangeText={(value) => updateFormField('amount', value.replace(/[^0-9]/g, ''))}
             keyboardType="numeric"
-            placeholderTextColor="#999"
+            placeholderTextColor="#666"
           />
+          <Text style={styles.note}>Beware of little expenses. A small leak will sink a great ship.</Text>
         </View>
 
         <View style={styles.formWrapper}>
-          <FormField 
-            label="Category" 
-            style={styles.categoryField}
-          >
-            <TouchableOpacity 
-              style={styles.selector}
-              onPress={() => toggleModal('category')}
-            >
-              {formData.category?.CategoryIcon && (
-                <Image 
-                  style={styles.categoryIcon} 
-                  source={formData.category.CategoryIcon}
-                />
-              )}
-              <Text style={styles.selectorText}>
-                {formData.category?.Category || 'Select category'}
-              </Text>
-            </TouchableOpacity>
-          </FormField>
+          <View style={styles.cardContainer}>
+            <FormField label="Category">
+              <TouchableOpacity 
+                style={styles.selector}
+                onPress={() => toggleModal('category')}
+              >
+                {formData.category?.CategoryIcon && (
+                  <Image 
+                    style={styles.categoryIcon} 
+                    source={formData.category.CategoryIcon}
+                  />
+                )}
+                <Text style={styles.selectorText}>
+                  {formData.category?.Category || 'Select category'}
+                </Text>
+              </TouchableOpacity>
+            </FormField>
 
-          <View style={styles.formContent}>
             <FormField label="Payment Method">
               <TouchableOpacity 
                 style={styles.selector}
@@ -146,14 +145,24 @@ const ExpenseForm = () => {
               </TouchableOpacity>
             </FormField>
 
-            <FormField label="Date">
-              <TextInput
-                style={styles.input}
-                value={formData.date}
-                placeholder="DD/MM/YYYY"
-                editable={false}
-              />
-            </FormField>
+            <View style={styles.dateContainer}>
+              <FormField label="Start Date" style={styles.dateField}>
+                <TextInput
+                  style={styles.dateInput}
+                  value={formData.startDate}
+                  placeholder="DD/MM/YYYY"
+                  editable={false}
+                />
+              </FormField>
+              <FormField label="End Date" style={styles.dateField}>
+                <TextInput
+                  style={styles.dateInput}
+                  value={formData.endDate}
+                  placeholder="DD/MM/YYYY"
+                  editable={false}
+                />
+              </FormField>
+            </View>
 
             <FormField label="Description">
               <TextInput
@@ -209,133 +218,150 @@ const ExpenseForm = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F5F7FA',
+    backgroundColor: '#F0F2F5',
   },
   headerContainer: {
-    backgroundColor: '#D4F4E4',
+    backgroundColor: '#2C3E50',
     paddingVertical: 16,
     paddingHorizontal: 20,
   },
   titleStyle: {
-    fontSize: width * 0.04,
-    color: '#00513D',
+    fontSize: width * 0.045,
+    color: '#FFFFFF',
     fontWeight: '600',
   },
   scrollView: {
     flex: 1,
   },
   amountContainer: {
-    height: height * 0.28,
-    backgroundColor: '#A7E8DC',
-    borderBottomLeftRadius: 80,
-    borderBottomRightRadius: 80,
+    // height: height * 0.22,
+    backgroundColor: '#34495E',
+    borderBottomLeftRadius:60,
+    borderTopRightRadius:60,
     paddingHorizontal: 24,
-    paddingTop:30,
-    paddingBottom: 40,
+    paddingVertical:40,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.2,
+    shadowRadius: 6,
+    elevation: 8,
+    marginHorizontal:20,
+    marginVertical:10,
+  },
+  amountLabel: {
+    fontSize: width * 0.042,
+    color: '#FFFFFF',
+    fontWeight: '600',
+    marginBottom: 16,
+  },
+  amountInput: {
+    fontSize: width * 0.06,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 16,
+    borderWidth: 0,
+    textAlign: 'center',
+    color: '#2C3E50',
+    fontWeight: '700',
+  },
+  note:{
+    color:"#FFFFFF",
+    fontSize:11,
+    fontWeight:"600",
+    paddingVertical:10,
+    textAlign:"center"
+  },
+  formWrapper: {
+    paddingHorizontal: 20,
+    paddingBottom: 20,
+  },
+  cardContainer: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 20,
+    padding: 16,
+    gap: 16,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
-    shadowRadius: 4,
+    shadowRadius: 8,
     elevation: 4,
-  },
-  amountLabel: {
-    fontSize: width * 0.038,
-    color: '#00513D',
-    fontWeight: '600',
-    marginBottom: 12,
-  },
-  amountInput: {
-    fontSize: width * 0.05,
-    backgroundColor: '#FFFFFF',
-    padding: width * 0.03,
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: '#E0E0E0',
-    textAlign: 'center',
-    color: '#333333',
-    fontWeight: '600',
-  },
-  formWrapper: {
-    marginTop: -(height * 0.10),
-    paddingHorizontal: 20,
-  },
-  categoryField: {
-    marginBottom: 15,
-  },
-  formContent: {
-    gap: 15,
-    marginBottom: 20,
-    backgroundColor:"white",
-    padding:8
   },
   fieldContainer: {
     backgroundColor: '#FFFFFF',
-    padding: 12,
     borderRadius: 12,
-    borderWidth: 1,
-    borderColor: '#E0E0E0',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.05,
-    shadowRadius: 2,
-    elevation: 2,
   },
   label: {
-    fontSize: width * 0.035,
-    color: '#333333',
-    fontWeight: '500',
+    fontSize: width * 0.038,
+    color: '#2C3E50',
+    fontWeight: '600',
     marginBottom: 8,
   },
-  input: {
-    fontSize: width * 0.030,
-    backgroundColor: '#F9F9F9',
+  dateContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    gap: 12,
+  },
+  dateField: {
+    flex: 1,
+  },
+  dateInput: {
+    fontSize: width * 0.032,
+    backgroundColor: '#F7F9FC',
     padding: 12,
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: '#E0E0E0',
-    color: '#333333',
+    borderColor: '#E2E8F0',
+    color: '#2C3E50',
+  },
+  input: {
+    fontSize: width * 0.032,
+    backgroundColor: '#F7F9FC',
+    padding: 14,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#E2E8F0',
+    color: '#2C3E50',
   },
   textArea: {
-    height: 100,
+    height: 120,
     textAlignVertical: 'top',
   },
   selector: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#F9F9F9',
-    padding: 12,
+    backgroundColor: '#F7F9FC',
+    padding: 14,
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: '#E0E0E0',
+    borderColor: '#E2E8F0',
   },
   selectorText: {
-    fontSize: width * 0.030,
-    color: '#333333',
+    fontSize: width * 0.032,
+    color: '#2C3E50',
   },
   categoryIcon: {
-    width: width * 0.06,
-    height: width * 0.06,
-    marginRight: 8,
+    width: width * 0.08,
+    height: width * 0.08,
+    marginRight: 12,
   },
   attachmentButton: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#F9F9F9',
-    padding: 16,
+    backgroundColor: '#F7F9FC',
+    padding: 20,
     borderRadius: 8,
     borderWidth: 1,
     borderStyle: 'dashed',
-    borderColor: '#E0E0E0',
+    borderColor: '#CBD5E0',
   },
   attachmentIcon: {
-    width: width * 0.06,
-    height: width * 0.06,
-    marginRight: 8,
+    width: width * 0.08,
+    height: width * 0.08,
+    marginRight: 12,
   },
   attachmentText: {
-    fontSize: width * 0.03,
-    color: '#666666',
+    fontSize: width * 0.032,
+    color: '#4A5568',
   },
   modalOverlay: {
     flex: 1,
@@ -356,32 +382,33 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   modalTitle: {
-    fontSize: width * 0.038,
+    fontSize: width * 0.042,
     fontWeight: '600',
-    color: '#333333',
+    color: '#2C3E50',
   },
   modalClose: {
     fontSize: width * 0.06,
-    color: '#666666',
+    color: '#4A5568',
   },
   modalItem: {
-    padding: width * 0.03,
-    borderBottomWidth: 0.7,
-    borderBottomColor: '#E0E0E0',
+    padding: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: '#E2E8F0',
   },
   modalItemText: {
-    fontSize: width * 0.03,
-    color: '#333333',
+    fontSize: width * 0.038,
+    color: '#2C3E50',
   },
   footer: {
-    paddingVertical: 12,
-    paddingHorizontal: 20,
+    paddingVertical: 10,
+    // paddingHorizontal: 20,
     backgroundColor: '#FFFFFF',
     borderTopWidth: 1,
-    borderTopColor: '#E0E0E0',
+    borderTopColor: '#E2E8F0',
   },
   submitButton: {
-    fontSize: width * 0.038,
+    fontSize: width * 0.042,
+    fontWeight: '600',
   },
 });
 

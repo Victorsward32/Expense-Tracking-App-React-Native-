@@ -29,46 +29,50 @@ const IncomeCard = ({
     <View style={styles.cardContainer}>
       <View style={styles.contentContainer}>
         {/* Current Amount Section */}
-        <View style={styles.currentAmountContainer}>
-          <View style={styles.currentAmountInnerContainer}>
+        <View style={styles.currentAmountSection}>
+          <View style={styles.currentAmountWrapper}>
             <Text style={styles.currentAmountText}>
               {formatCurrency(currentAmount)}
             </Text>
           </View>
-          <Text style={styles.spendingPercentageText}>
-            You spent {calculateSpendingPercentage()}% of your Income
-          </Text>
+          <View style={styles.percentageContainer}>
+            <Text style={styles.spendingPercentageText}>
+              You spent <Text style={styles.percentageHighlight}>{calculateSpendingPercentage()}%</Text> of your Income
+            </Text>
+          </View>
         </View>
 
-        {/* Bottom Section */}
-        <View style={styles.bottomContainer}>
+        {/* Stats Section */}
+        <View style={styles.statsContainer}>
           {/* Net Income */}
-          <View style={[styles.detailContainer, styles.netIncomeContainer]}>
-            <View style={styles.iconBackground}>
-              <Image style={styles.detailIcon} source={Icons.IncomeIcon} />
+          <View style={styles.statCard}>
+            <View style={[styles.iconContainer, styles.incomeIconBg]}>
+              <Image 
+                style={[styles.icon, styles.incomeIcon]} 
+                source={Icons.IncomeIcon}
+              />
             </View>
-            <View>
-              <Text style={styles.detailLabel}>Net Income</Text>
-              <View style={styles.amountContainerRight}>
-                <Text style={styles.detailAmount}>
-                  {formatCurrency(totalAmount)}
-                </Text>
-              </View>
+            <View style={styles.statInfo}>
+              <Text style={styles.statLabel}>Net Income</Text>
+              <Text style={styles.statAmount}>
+                {formatCurrency(totalAmount)}
+              </Text>
             </View>
           </View>
 
           {/* Expenditure */}
-          <View style={[styles.detailContainer, styles.expenditureContainer]}>
-            <View style={styles.iconBackground}>
-              <Image style={styles.detailsIcon} source={Icons.ExpendetureIcon} />
+          <View style={styles.statCard}>
+            <View style={[styles.iconContainer, styles.expenseIconBg]}>
+              <Image 
+                style={[styles.icon, styles.expenseIcon]} 
+                source={Icons.ExpendetureIcon}
+              />
             </View>
-            <View>
-              <Text style={styles.detailLabel}>Expenditure</Text>
-              <View style={styles.amountContainerRight}>
-                <Text style={styles.detailAmount}>
-                  {formatCurrency(expendedAmount)}
-                </Text>
-              </View>
+            <View style={styles.statInfo}>
+              <Text style={styles.statLabel}>Expenditure</Text>
+              <Text style={styles.statAmount}>
+                {formatCurrency(expendedAmount)}
+              </Text>
             </View>
           </View>
         </View>
@@ -91,97 +95,102 @@ IncomeCard.propTypes = {
 
 const styles = StyleSheet.create({
   cardContainer: {
-    backgroundColor: '#ffffff',
-    borderRadius: 10,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 16,
     marginHorizontal: 16,
-    marginVertical: 10,
-    borderWidth: 1,
-    borderColor: '#ddd',
+    marginVertical: 12,
+    shadowColor: '#4B6584',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 5,
   },
   contentContainer: {
-    padding: 20,
+    padding: 24,
   },
-  currentAmountContainer: {
+  currentAmountSection: {
     alignItems: 'center',
-    // marginBottom: 20,
+    marginBottom: 32,
   },
-  currentAmountInnerContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  rupeesIcon: {
-    height: 15,
-    width: 15,
+  currentAmountWrapper: {
+    marginBottom: 8,
   },
   currentAmountText: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    color: '#333',
-    marginLeft: 5,
+    fontSize: 32,
+    fontWeight: '700',
+    color: '#2D3F58',
+    letterSpacing: 0.5,
+  },
+  percentageContainer: {
+    backgroundColor: '#F5F7FA',
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: 20,
   },
   spendingPercentageText: {
-    color: '#666',
+    color: '#4B6584',
     fontSize: 14,
+    fontWeight: '500',
   },
-  bottomContainer: {
+  percentageHighlight: {
+    color: '#2D3F58',
+    fontWeight: '700',
+  },
+  statsContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    gap: 12,
-    top:40,
+    gap: 16,
   },
-  detailContainer: {
+  statCard: {
+    flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: 'white',
+    backgroundColor: '#FFFFFF',
     borderRadius: 12,
-    padding: 12,
-    flex: 1,
-    shadowColor: '#000',
+    padding: 16,
+    shadowColor: '#4B6584',
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
+    shadowOpacity: 0.06,
     shadowRadius: 4,
     elevation: 3,
   },
-  iconBackground: {
-    backgroundColor: '#F0EFF9',
+  iconContainer: {
+    width: 44,
+    height: 44,
     borderRadius: 12,
-    width: 40,
-    height: 40,
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 12,
   },
-  detailIcon: {
-    width: 20,
-    height: 20,
+  incomeIconBg: {
+    backgroundColor: '#E3F2FF',
+  },
+  expenseIconBg: {
+    backgroundColor: '#E6F8E6',
+  },
+  icon: {
+    width: 22,
+    height: 22,
+  },
+  incomeIcon: {
     tintColor: '#1A74FA',
   },
-  detailsIcon:{
-    width: 20,
-    height: 20,
-    tintColor: 'green',
+  expenseIcon: {
+    tintColor: '#34C759',
   },
-  detailLabel: {
-    color: '#666',
+  statInfo: {
+    flex: 1,
+  },
+  statLabel: {
     fontSize: 12,
+    color: '#8395A7',
     marginBottom: 4,
   },
-  detailAmount: {
-    color: '#333',
+  statAmount: {
     fontSize: 16,
     fontWeight: '600',
+    color: '#2D3F58',
   },
-  netIncomeContainer: {
-    marginRight: 6,
-  },
-  expenditureContainer: {
-    marginLeft: 6,
-  }
 });
 
 export default IncomeCard;

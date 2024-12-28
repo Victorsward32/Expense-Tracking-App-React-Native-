@@ -83,3 +83,11 @@ export const ExpensesIcon={
     Univercity:require('../assets/icons/Expenses/Univercity.png'),
     Water_bill:require('../assets/icons/Expenses/Water_bill.png'),
 }
+
+export const BottomBarIcons= {
+    dahboard:require('../assets/icons/BottomBarIcons/Home.png'),
+    user: require('../assets/icons/BottomBarIcons/user.png'),
+    reports:require('../assets/icons/BottomBarIcons/reports.png'),
+    wallet:require('../assets/icons/BottomBarIcons/wallet.png'),
+
+}

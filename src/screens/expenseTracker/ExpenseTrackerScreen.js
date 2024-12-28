@@ -11,6 +11,7 @@ const ExpenseTrackerScreen = () => {
     containerStyle={styles.headerContainer}
     titleStyle={styles.titleStyle}
   />
+  
     </SafeAreaView>
   )
 }

@@ -1,72 +1,88 @@
-import React from 'react'
-import { Image, StyleSheet, Text, Touchable, TouchableOpacity, View } from 'react-native'
-import { SafeAreaView } from 'react-native-safe-area-context'
-import { ScrollView } from 'react-native-gesture-handler'
-
-import Header from '../../components/templates/Header'
-import IncomeCard from '../../components/organisms/IncomeCard'
-import { width } from '../../utils/CommonUtils'
-import { Icons, Images } from '../../utils/ImageConstant'
-import { useNavigation } from '@react-navigation/native'
+import React from 'react';
+import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { ScrollView } from 'react-native-gesture-handler';
+import Header from '../../components/templates/Header';
+import IncomeCard from '../../components/organisms/IncomeCard';
+import { width } from '../../utils/CommonUtils';
+import { Icons, Images } from '../../utils/ImageConstant';
+import { useNavigation } from '@react-navigation/native';
 
 const ExpendentureItem = ({ title, amount, icon }) => {
+  const formattedAmount = new Intl.NumberFormat('en-IN', {
+    style: 'currency',
+    currency: 'INR',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0
+  }).format(amount);
+
   return (
     <View style={styles.itemContainer}>
-      <View style={styles.iconContainer}>
-        <Image source={icon} style={styles.icon} />
-      </View>
-      <Text style={styles.titleText}>{title}</Text>
-      <View style={styles.amountContainer}>
-        <Image source={Icons.rupeesIcon} style={styles.rupeesIcon} />
-        <Text style={styles.amountText}>{amount}</Text>
+      <View style={styles.itemContent}>
+        <View style={styles.iconContainer}>
+          <Image source={icon} style={styles.icon} />
+        </View>
+        <View style={styles.itemDetails}>
+          <Text style={styles.titleText}>{title}</Text>
+          <Text style={styles.amountText}>{formattedAmount}</Text>
+        </View>
       </View>
     </View>
   );
-}
+};
 
 const DashBoardScreen = () => {
-  const navigation=useNavigation();
+  const navigation = useNavigation();
   const expenditureData = [
     { title: 'Groceries', amount: '500', icon: Images.girlPlanningBudget },
     { title: 'Transport', amount: '300', icon: Icons.cameraIcon },
     { title: 'Utilities', amount: '200', icon: Icons.cameraIcon },
-    { title: 'Groceries', amount: '500', icon: Icons.cameraIcon },
-    { title: 'Transport', amount: '300', icon: Icons.cameraIcon },
-    { title: 'Utilities', amount: '200', icon: Icons.cameraIcon },
-    { title: 'Groceries', amount: '500', icon: Icons.cameraIcon },
-    { title: 'Transport', amount: '300', icon: Icons.cameraIcon },
-    { title: 'Utilities', amount: '200', icon: Icons.cameraIcon }
+    // ... other items
   ];
 
   return (
-    <SafeAreaView style={styles.SafeAreaView}>
+    <SafeAreaView style={styles.safeAreaView}>
       <Header
         title="Dashboard"
         containerStyle={styles.headerContainer}
         titleStyle={styles.titleStyle}
       />
-      <ScrollView style={styles.PortfolioContainer} showsVerticalScrollIndicator={false}>
-        <View style={styles.IncomeContainer}>
-          <IncomeCard 
-            currentAmount={2000} 
-            totalAmount={12000} 
-            expendedAmount={10000} 
+      <ScrollView 
+        style={styles.scrollView} 
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.scrollContent}
+      >
+        <View style={styles.incomeContainer}>
+          <IncomeCard
+            currentAmount={2000}
+            totalAmount={12000}
+            expendedAmount={10000}
           />
         </View>
 
-        <View style={styles.AddExpenseContainer}>
-        <TouchableOpacity onPress={()=>{
-          navigation.navigate("ExpenseForm")
-        }}>
-        <Image style={styles.AddIcon} source={Icons.AddIcon}/>
-        </TouchableOpacity>
-        <Text style={styles.AddExpenseTitle}>Please Add your Expense Here  </Text>
+        <View style={styles.addExpenseCard}>
+          <TouchableOpacity 
+            style={styles.addButton}
+            onPress={() => navigation.navigate("ExpenseForm")}
+          >
+            <View style={styles.addIconContainer}>
+              <Image style={styles.addIcon} source={Icons.AddIcon} />
+            </View>
+            <Text style={styles.addExpenseText}>Add New Expense</Text>
+            <Text style={styles.addExpenseSubtext}>Track your daily expenses</Text>
+          </TouchableOpacity>
         </View>
 
-        <View style={styles.ExpendatureContainer}>
-          <Text style={styles.ExpendatureTitle}>Expenditure</Text>
+        <View style={styles.expenditureContainer}>
+          <View style={styles.sectionHeader}>
+            <Text style={styles.sectionTitle}>Recent Expenses</Text>
+            <TouchableOpacity>
+              <Text style={styles.viewAllText}>View All</Text>
+            </TouchableOpacity>
+          </View>
+          
           {expenditureData.map((item, index) => (
-            <ExpendentureItem 
+            <ExpendentureItem
               key={index}
               title={item.title}
               amount={item.amount}
@@ -76,111 +92,134 @@ const DashBoardScreen = () => {
         </View>
       </ScrollView>
     </SafeAreaView>
-  )
-}
-
-export default DashBoardScreen
+  );
+};
 
 const styles = StyleSheet.create({
-  SafeAreaView: {
+  safeAreaView: {
     flex: 1,
+    backgroundColor: '#F5F7FA',
   },
   headerContainer: {
-    backgroundColor: '#D4F4E4',
+    backgroundColor: '#4B6584',
+    paddingVertical: 16,
   },
   titleStyle: {
-    fontSize: width * 0.04,
+    fontSize: 18,
+    fontWeight: '700',
+    color: '#FFFFFF',
   },
-  IncomeContainer: {
-    paddingVertical: 10,
+  scrollView: {
+    flex: 1,
   },
-  ExpendatureContainer: {
-    paddingVertical: 20,
-    paddingHorizontal: 20,
+  scrollContent: {
+    paddingBottom: 24,
   },
-  ExpendatureTitle: {
+  incomeContainer: {
+    paddingVertical: 16,
+  },
+  addExpenseCard: {
+    marginHorizontal: 16,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 16,
+    shadowColor: '#4B6584',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 5,
+  },
+  addButton: {
+    padding: 20,
+    alignItems: 'center',
+  },
+  addIconContainer: {
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    backgroundColor: '#E3F2FF',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+  addIcon: {
+    width: 28,
+    height: 28,
+    tintColor: '#1A74FA',
+  },
+  addExpenseText: {
     fontSize: 16,
-    fontWeight: "bold",
-    lineHeight: 20,
-    marginBottom: 10,
+    fontWeight: '600',
+    color: '#2D3F58',
+    marginBottom: 4,
+  },
+  addExpenseSubtext: {
+    fontSize: 14,
+    color: '#8395A7',
+  },
+  expenditureContainer: {
+    marginTop: 24,
+    paddingHorizontal: 16,
+  },
+  sectionHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: '700',
+    color: '#2D3F58',
+  },
+  viewAllText: {
+    fontSize: 14,
+    color: '#1A74FA',
+    fontWeight: '600',
   },
   itemContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingVertical: 5,
-    paddingHorizontal:12,
-    borderBottomWidth: 0.4,
-    borderColor: '#E0E0E0',
-    borderRadius: 8,
-    marginVertical: 8,
-    backgroundColor: 'white',
-    shadowColor: '#000',
+    backgroundColor: '#FFFFFF',
+    borderRadius: 12,
+    marginBottom: 12,
+    shadowColor: '#4B6584',
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
+    shadowOpacity: 0.06,
     shadowRadius: 4,
     elevation: 3,
   },
+  itemContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 16,
+  },
   iconContainer: {
-    backgroundColor: '#F0EFF9',
+    width: 44,
+    height: 44,
     borderRadius: 12,
-    width: 40,
-    height: 40,
+    backgroundColor: '#F5F7FA',
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 12,
   },
   icon: {
-    width: 30,
-    height: 30,
-    // tintColor: '#1A74FA',
+    width: 24,
+    height: 24,
   },
-  titleText: {
+  itemDetails: {
     flex: 1,
-    fontSize: 16,
-    color: '#333',
-  },
-  amountContainer: {
     flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center',
   },
-  rupeesIcon: {
-    width: 16,
-    height: 16,
-    marginRight: 4,
+  titleText: {
+    fontSize: 15,
+    fontWeight: '500',
+    color: '#2D3F58',
   },
   amountText: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#333',
+    fontSize: 15,
+    fontWeight: '600',
+    color: '#2D3F58',
   },
-  AddExpenseContainer:{
-    backgroundColor: '#ffffff',
-    borderRadius: 10,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
-    marginHorizontal: 16,
-    marginVertical: 10,
-    borderWidth: 1,
-    borderColor: '#ddd', 
-    paddingHorizontal:24,
-    paddingVertical:20, 
-    alignItems:"center",
-    gap:10,
-  },
-  AddIcon:{
-    height:50,
-    width:50,
-    resizeMode:"contain",
-  },
-  AddExpenseTitle:{
-    fontSize: 16,
-    fontWeight: "bold",
-    lineHeight: 20,
-    marginBottom: 10,
-    textAlign:"center"
-  }
-  
-})
+});
+
+export default DashBoardScreen;

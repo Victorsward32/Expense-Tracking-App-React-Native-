@@ -9,6 +9,8 @@ import settings from '../screens/settings/settings';
 import ReportScreen from '../screens/reports/ReportScreen';
 import ExpenseForm from '../screens/expenseForm/ExpenseForm';
 import ExpenseType from '../screens/expenseForm/ExpenseList/ExpenseType';
+import { Image } from 'react-native';
+import { BottomBarIcons } from '../utils/ImageConstant';
 
 
         
@@ -32,80 +34,85 @@ const StackNavigation = () => {
   );
 };
 
-// const MainTabNavigator = () => {
-//   return (
-//     <Tab.Navigator screenOptions={{headerShown:false}}>
-//       <Tab.Screen name="DashBoardScreen" component={DashBoardScreen} />
-//       <Tab.Screen name="ExpenseTrackerScreen" component={ExpenseTrackerScreen} />
-//       <Tab.Screen name="ReportScreen" component={ReportScreen} />
-//       <Tab.Screen name="Settings" component={settings} />
-//     </Tab.Navigator>
-//   );
-// };
 const MainTabNavigator = () => {
   return (
     <Tab.Navigator
-      screenOptions={{
-        headerShown: false,
-        tabBarStyle: { height: 60, backgroundColor: '#00513D'},
-        // tabBarActiveBackgroundColor:{Tab}
-        // tabBarInactiveBackgroundColor:{"black"},
+    screenOptions={{
+      headerShown: false,
+      tabBarStyle: { height: 60, backgroundColor: '#F5F7FA' },
+      tabBarActiveTintColor: '#007aff', // Active tab color
+      tabBarInactiveTintColor: 'gray', // Inactive tab color
+    }}
+  >
+    <Tab.Screen
+      name="Dashboard"
+      component={DashBoardScreen}
+      options={{
+        tabBarIcon: ({ focused }) => (
+          <Image
+            source={
+              focused
+                ? BottomBarIcons.dahboard
+                : BottomBarIcons.dahboard
+            }
+            style={{ width: 24, height: 24 }}
+            resizeMode="contain"
+          />
+        ),
       }}
-    >
-      <Tab.Screen
-        name="Dashboard"
-        component={DashBoardScreen}
-        // options={{
-        //   tabBarIcon: ({ color, size, focused }) => (
-        //     <Ionicons name="house" color="#ff0000" size={20} />
-        //     // <Ionicons
-        //     //   name="home-outline"
-        //     //   size={size}
-        //     //   color={focused ? '#007aff' : color} // Change color when focused
-        //     // />
-        //   ),
-        // }}
-      />
-      <Tab.Screen
-        name="ExpenseTracker"
-        component={ExpenseTrackerScreen}
-        // options={{
-        //   tabBarIcon: ({ color, size, focused }) => (
-        //     <Ionicons
-        //       name="wallet-outline"
-        //       size={size}
-        //       color={focused ? '#007aff' : color} // Change color when focused
-        //     />
-        //   ),
-        // }}
-      />
-      <Tab.Screen
-        name="Reports"
-        component={ReportScreen}
-        // options={{
-        //   tabBarIcon: ({ color, size, focused }) => (
-        //     <Ionicons
-        //       name="bar-chart-outline"
-        //       size={size}
-        //       color={focused ? '#007aff' : color} // Change color when focused
-        //     />
-        //   ),
-        // }}
-      />
-      <Tab.Screen
-        name="More"
-        component={settings}
-        // options={{
-        //   tabBarIcon: ({ color, size, focused }) => (
-        //     <AntDesign
-        //       name="home"
-        //       size={size}
-        //       color={focused ? '#007aff' : color} // Change color when focused
-        //     />
-        //   ),
-        // }}
-      />
-    </Tab.Navigator>
+    />
+    <Tab.Screen
+      name="ExpenseTracker"
+      component={ExpenseTrackerScreen}
+      options={{
+        tabBarIcon: ({ focused }) => (
+          <Image
+            source={
+              focused
+                ? BottomBarIcons.wallet
+                :BottomBarIcons.wallet
+            }
+            style={{ width: 24, height: 24 }}
+            resizeMode="contain"
+          />
+        ),
+      }}
+    />
+    <Tab.Screen
+      name="Reports"
+      component={ReportScreen}
+      options={{
+        tabBarIcon: ({ focused }) => (
+          <Image
+            source={
+              focused
+                ? BottomBarIcons.reports
+                : BottomBarIcons.reports
+            }
+            style={{ width: 24, height: 24 }}
+            resizeMode="contain"
+          />
+        ),
+      }}
+    />
+    <Tab.Screen
+      name="Profile"
+      component={settings}
+      options={{
+        tabBarIcon: ({ focused }) => (
+          <Image
+            source={
+              focused
+                ? BottomBarIcons.user
+                : BottomBarIcons.user
+            }
+            style={{ width: 24, height: 24 }}
+            resizeMode="contain"
+          />
+        ),
+      }}
+    />
+  </Tab.Navigator>
   );
 };
 
