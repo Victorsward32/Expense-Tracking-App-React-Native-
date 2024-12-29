@@ -31,7 +31,7 @@ const styles = StyleSheet.create({
        paddingHorizontal:20, 
     },
     OpacityContainer:{
-        backgroundColor:"#2C3E50",
+        backgroundColor:"#7289DA",
         paddingHorizontal:20,
         paddingVertical:12,
         borderRadius:16,

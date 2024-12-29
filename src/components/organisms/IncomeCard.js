@@ -42,6 +42,10 @@ const IncomeCard = ({
           </View>
         </View>
 
+        <View style={{justifyContent:"center",alignItems:"center"}}>
+          <Image style={{height:160,width:160,resizeMode:"contain"}} source={Images.youngwomansittingofloorinheadphones}/>
+        </View>
+
         {/* Stats Section */}
         <View style={styles.statsContainer}>
           {/* Net Income */}

@@ -27,9 +27,9 @@ const Settings = ({ navigation }) => {
     },
     { 
       id: 2, 
-      title: "My Household", 
-      icon: Icons.groupIcon,
-      onPress: () => navigation.navigate('Household')
+      title: "Settings", 
+      icon: Icons.settingsIcon,
+      onPress: () => navigation.navigate('AppSettings')
     },
     { 
       id: 3, 
@@ -39,15 +39,9 @@ const Settings = ({ navigation }) => {
     },
     { 
       id: 4, 
-      title: "Billing", 
-      icon: Icons.moneyIcon,
-      onPress: () => navigation.navigate('Billing')
-    },
-    { 
-      id: 5, 
-      title: "Settings", 
+      title: "Logout", 
       icon: Icons.settingsIcon,
-      onPress: () => navigation.navigate('AppSettings')
+      onPress: () => navigation.navigate('loginScreen')
     },
   ];
 
@@ -112,10 +106,12 @@ const styles = StyleSheet.create({
     backgroundColor: '#F5F5F5',
   },
   headerContainer: {
-    backgroundColor: '#D4F4E4',
+       backgroundColor:"#7289DA"
   },
   titleStyle: {
     fontSize: width * 0.04,
+    color:"white"
+ 
   },
   header: {
     // backgroundColor: '#EDF8F4',

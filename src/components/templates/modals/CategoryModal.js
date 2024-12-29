@@ -71,13 +71,13 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   headerContainer: {
-    backgroundColor: '#D4F4E4',
+    backgroundColor: '#7289DA',
     padding: 16,
   },
   titleStyle: {
     fontSize: width * 0.045,
     textAlign: 'center',
-    color: '#333',
+    color: 'white',
   },
   scrollContainer: {
     paddingHorizontal: 16,

@@ -4,13 +4,14 @@ import loginScreen from '../screens/auth/loginScreen';
 import OnBoardingScreen from '../screens/onboarding/OnBoardingScreen';
 import BudgetSetUpScreen from '../screens/budgetSetup/BudgetSetUpScreen';
 import DashBoardScreen from '../screens/dashboard/DashBoardScreen';
-import ExpenseTrackerScreen from '../screens/expenseTracker/ExpenseTrackerScreen';
 import settings from '../screens/settings/settings';
 import ReportScreen from '../screens/reports/ReportScreen';
 import ExpenseForm from '../screens/expenseForm/ExpenseForm';
 import ExpenseType from '../screens/expenseForm/ExpenseList/ExpenseType';
 import { Image } from 'react-native';
 import { BottomBarIcons } from '../utils/ImageConstant';
+import RegisterScreen from '../screens/auth/RegisterScreen';
+import FinanCialChatAIScreen from '../screens/FinanceChat/FinanCialChatAIScreen';
 
 
         
@@ -24,6 +25,7 @@ const StackNavigation = () => {
       {/* Authentication Flow */}
       <Stack.Screen name="OnBoardingScreen" component={OnBoardingScreen} />
       <Stack.Screen name="loginScreen" component={loginScreen} />
+      <Stack.Screen name="RegisterScreen" component={RegisterScreen} />
 
       {/* Main App Flow */}
       <Stack.Screen name="MainTabNavigator" component={MainTabNavigator} />
@@ -61,23 +63,7 @@ const MainTabNavigator = () => {
         ),
       }}
     />
-    <Tab.Screen
-      name="ExpenseTracker"
-      component={ExpenseTrackerScreen}
-      options={{
-        tabBarIcon: ({ focused }) => (
-          <Image
-            source={
-              focused
-                ? BottomBarIcons.wallet
-                :BottomBarIcons.wallet
-            }
-            style={{ width: 24, height: 24 }}
-            resizeMode="contain"
-          />
-        ),
-      }}
-    />
+   
     <Tab.Screen
       name="Reports"
       component={ReportScreen}
@@ -88,6 +74,23 @@ const MainTabNavigator = () => {
               focused
                 ? BottomBarIcons.reports
                 : BottomBarIcons.reports
+            }
+            style={{ width: 24, height: 24 }}
+            resizeMode="contain"
+          />
+        ),
+      }}
+    />
+     <Tab.Screen
+      name="Chat"
+      component={FinanCialChatAIScreen}
+      options={{
+        tabBarIcon: ({ focused }) => (
+          <Image
+            source={
+              focused
+                ? BottomBarIcons.wallet
+                :BottomBarIcons.wallet
             }
             style={{ width: 24, height: 24 }}
             resizeMode="contain"

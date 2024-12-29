@@ -8,10 +8,11 @@ import {
   Dimensions,
   TouchableOpacity,
   Image,
+  Alert,  // Import the Alert component for prompting
 } from 'react-native';
 import { LineChart } from 'react-native-gifted-charts';
 import Header from '../../components/templates/Header';
-import { Images } from '../../utils/ImageConstant';
+import { Icons, Images } from '../../utils/ImageConstant';
 
 const { width } = Dimensions.get('window');
 
@@ -80,11 +81,9 @@ const ReportScreen = () => {
         areaChart
         data={chartData}
         data2={expenseData}
-        // height={200}
-        // spacing={50}
         initialSpacing={20}
-        color1="#4CAF50"  // Green for income
-        color2="#FF5722"  // Red-Orange for expense
+        color1="#4CAF50"
+        color2="#FF5722"
         textColor1="#4CAF50"
         textColor2="#FF5722"
         hideDataPoints={false}
@@ -99,16 +98,13 @@ const ReportScreen = () => {
         yAxisThickness={1}
         xAxisThickness={1}
         backgroundColor="#fff"
-        startFillColor1="rgba(76, 175, 80, 0.2)"  // Light Green
-        startFillColor2="rgba(255, 87, 34, 0.2)"  // Light Red-Orange
-        // endFillColor1="rgba(76, 175, 80, 0.0)"  // Transparent Green
-        // endFillColor2="rgba(255, 87, 34, 0.0)"  // Transparent Red-Orange
+        startFillColor1="rgba(76, 175, 80, 0.2)"
+        startFillColor2="rgba(255, 87, 34, 0.2)"
         dataPointsColor1="#4CAF50"
         dataPointsColor2="#FF5722"
         dataPointsRadius={6}
         focusEnabled
         showValuesAsDataPointsText
-
       />
       <View style={styles.legendContainer}>
         <View style={styles.legendItem}>
@@ -123,6 +119,15 @@ const ReportScreen = () => {
     </View>
   );
 
+  const handleDownload = () => {
+    if (!selectedPeriod) {
+      Alert.alert("Select Time Period", "Please select a time period before downloading the report.");
+    } else {
+      // Proceed with the download action (you can implement the actual download logic here)
+      Alert.alert("Download", "Downloading report for period: " + selectedPeriod);
+    }
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <Header
@@ -131,21 +136,6 @@ const ReportScreen = () => {
         titleStyle={styles.titleStyle}
       />
       <ScrollView contentContainerStyle={styles.scrollView}>
-        <View style={styles.periodContainer}>
-          {periods.map((period) => (
-            <TouchableOpacity
-              key={period}
-              style={[styles.periodButton, selectedPeriod === period && styles.selectedPeriod]}
-              onPress={() => setSelectedPeriod(period)}
-            >
-              <Text
-                style={[styles.periodText, selectedPeriod === period && styles.selectedPeriodText]}
-              >
-                {period}
-              </Text>
-            </TouchableOpacity>
-          ))}
-        </View>
         <View style={styles.toggleContainer}>
           {['Graph', 'Card'].map((method) => (
             <TouchableOpacity
@@ -161,7 +151,33 @@ const ReportScreen = () => {
             </TouchableOpacity>
           ))}
         </View>
+
         {selectedMethod === 'Card' ? renderCard() : renderGraph()}
+
+        <Text style={{paddingVertical:10,lineHeight:20,fontSize:14,fontWeight:"500",textAlign:"center",color:"#7289DA"}}> Note: Before clicking on the Downloade report button please make sure click on the valid period. </Text>
+
+        <View style={styles.periodContainer}>
+          {periods.map((period) => (
+            <TouchableOpacity
+              key={period}
+              style={[styles.periodButton, selectedPeriod === period && styles.selectedPeriod]}
+              onPress={() => setSelectedPeriod(period)}
+            >
+              <Text
+                style={[styles.periodText, selectedPeriod === period && styles.selectedPeriodText]}
+              >
+                {period}
+              </Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+
+        <View style={styles.downloadContainer}>
+          <TouchableOpacity style={styles.downloadBtn} onPress={handleDownload}>
+            <Image source={Icons.Attachment} style={{ height: 20, width: 20, resizeMode: 'contain' }} />
+            <Text style={styles.downloadText}>Download Report</Text>
+          </TouchableOpacity>
+        </View>
       </ScrollView>
     </SafeAreaView>
   );
@@ -170,10 +186,10 @@ const ReportScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#f5f7ff',
   },
   headerContainer: {
-    backgroundColor: '#333',
+    backgroundColor: '#7289DA',
     padding: 16,
   },
   titleStyle: {
@@ -199,10 +215,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   selectedPeriod: {
-    backgroundColor: '#333',
+    backgroundColor: '#7289DA',
   },
   periodText: {
-    color: '#333',
+    color: '#7289DA',
     fontSize: 14,
     fontWeight: '600',
   },
@@ -223,10 +239,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   activeToggle: {
-    backgroundColor: '#333',
+    backgroundColor: '#7289DA',
   },
   toggleText: {
-    color: '#333',
+    color: '#7289DA',
     fontWeight: '600',
   },
   activeToggleText: {
@@ -246,7 +262,7 @@ const styles = StyleSheet.create({
   cardHeaderText: {
     fontSize: 20,
     fontWeight: '700',
-    color: '#333',
+    color: '#7289DA',
     textAlign: 'center',
   },
   cardSubText: {
@@ -298,7 +314,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '700',
     marginBottom: 16,
-    color: '#333',
+    color: '#7289DA',
     textAlign: 'center',
   },
   yAxisText: {
@@ -327,6 +343,27 @@ const styles = StyleSheet.create({
     fontSize: 14,
     marginLeft: 6,
     color: '#333',
+  },
+  downloadContainer: {
+    borderWidth:0.7,
+    borderColor:"grey",
+    borderRadius: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+  },
+  downloadBtn: {
+    paddingVertical: 26,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  downloadText: {
+    fontSize: 16,
+    marginLeft: 8,
+    fontWeight: '600',
+    color: '#7289DA',
   },
 });
 

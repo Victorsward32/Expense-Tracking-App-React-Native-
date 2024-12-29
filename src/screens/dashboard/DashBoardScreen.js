@@ -5,7 +5,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 import Header from '../../components/templates/Header';
 import IncomeCard from '../../components/organisms/IncomeCard';
 import { width } from '../../utils/CommonUtils';
-import { Icons, Images } from '../../utils/ImageConstant';
+import { ExpensesIcon, Icons, Images } from '../../utils/ImageConstant';
 import { useNavigation } from '@react-navigation/native';
 
 const ExpendentureItem = ({ title, amount, icon }) => {
@@ -34,9 +34,10 @@ const ExpendentureItem = ({ title, amount, icon }) => {
 const DashBoardScreen = () => {
   const navigation = useNavigation();
   const expenditureData = [
-    { title: 'Groceries', amount: '500', icon: Images.girlPlanningBudget },
+    { title: 'Groceries', amount: '500', icon: ExpensesIcon.HealthyFood},
     { title: 'Transport', amount: '300', icon: Icons.cameraIcon },
     { title: 'Utilities', amount: '200', icon: Icons.cameraIcon },
+    { title: 'Utilities', amount: '200', icon: Images.addNewUserWindow },
     // ... other items
   ];
 
@@ -98,10 +99,10 @@ const DashBoardScreen = () => {
 const styles = StyleSheet.create({
   safeAreaView: {
     flex: 1,
-    backgroundColor: '#F5F7FA',
+    backgroundColor: "#f5f7ff",
   },
   headerContainer: {
-    backgroundColor: '#4B6584',
+    backgroundColor: '#7289DA',
     paddingVertical: 16,
   },
   titleStyle: {

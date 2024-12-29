@@ -59,32 +59,34 @@ export default OnBoardingScreen;
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
+    backgroundColor:"#f5f7ff",
   },
   container: {
     paddingHorizontal: 0.01,
-    paddingBottom: height * 0.1, // Space at the bottom for the next page button
+    paddingBottom: height * 0.1, 
   },
   mainTitle: {
-    fontSize: width * 0.06, // 6% of screen width for font size
+    fontSize: width * 0.06,
     fontWeight: 'bold',
-    marginVertical: height * 0.02, // 2% of screen height for margin
+    marginVertical: height * 0.02,
     textAlign: 'center',
   },
   SectionContainer: {
-    paddingHorizontal: width * 0.05, // 5% padding from sides
-    marginBottom: height * 0.1, // 10% margin at the bottom
+    paddingHorizontal: width * 0.05, 
+    marginBottom: height * 0.1, 
   },
   sectionTitle: {
-    fontSize: width * 0.04, // 4% of screen width for font size
+    fontSize: width * 0.04,
     fontWeight: 'bold',
-    marginTop: height * 0.02, // 2% of screen height for margin top
-    marginBottom: height * 0.015, // 1.5% of screen height for margin bottom
-    color: '#1A5F7A', // Section header color
+    marginTop: height * 0.02, 
+    marginBottom: height * 0.015, 
+    color: '#1A5F7A', 
   },
   titleStyle: {
-    fontSize: width * 0.04, // Adjust font size relative to screen width
+    fontSize: width * 0.04, 
+    color:"white"
   },
   headerContainer: {
-    backgroundColor: '#F5F5F5',
+    backgroundColor: '#7289DA',
   },
 });
